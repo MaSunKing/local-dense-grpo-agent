@@ -1,16 +1,16 @@
-# Evidence funnel
+# 检索与证据漏斗
 
 ```text
-Search candidates → selected Browse source → parsed HTML/XML sections
-→ generic template filtering → coordinate-preserving chunks
-→ BM25/BGE candidate retrieval → MiniLM reranking
-→ budgeted evidence chunks → State and Final context
+Search 候选 → Browse 选源 → HTML/XML section
+→ 通用模板噪声过滤 → 保留坐标的 chunks
+→ BM25/BGE 召回 → MiniLM 重排
+→ 按预算返回正文片段 → State / Final context
 ```
 
-The backend supports web pages and biomedical XML sources. Generic structural/template filtering is applied before ranking, rather than domain-specific bans on a particular site. Substantive prose and short evidence-bearing statements must remain available; bibliographies are not blanket-removed. Original text coordinates and chunk hashes support provenance inspection.
+后端支持网页与医学 XML。排序前做通用结构/模板清洗，而不是针对某个域名写特例。保留正文、短证据陈述及原始坐标/哈希；不按“参考文献”标题一刀切删除内容。
 
-Chunk boundaries handle Chinese/fullwidth punctuation, closing symbols, ellipses, URLs and decimals. This is multilingual segmentation support, not a claim of universal language quality. The default BGE-small-en and MS-MARCO MiniLM models are English-oriented; retrieval effectiveness must be tested on the deployment's languages.
+Chunk 边界兼顾中文/全角标点、闭合符号、省略号、URL 与小数。这是多语言切分支持，不代表所有语言的检索质量已验证。默认 BGE-small-en 和 MS-MARCO MiniLM 偏英语，应按实际部署语言评价效果。
 
-BM25 lexical retrieval and BGE semantic retrieval supply candidates; MiniLM reranks candidates before passage/token budgets are enforced. Tools may use PubMed, Semantic Scholar, web search and document extraction providers. Configure service credentials locally; no keys or weights are shipped here.
+BM25 与 BGE 提供候选，MiniLM 重排后执行片段/token 预算。PubMed、Semantic Scholar、web search 和文档解析服务需自行配置；公开版不携带凭证或权重。
 
-Debug evidence provenance by comparing fetched/parsed document, all sections/chunks, selected passages and actual Final input. A legal citation ID or clean passage is not proof that the final attached claim is supported.
+排查证据质量时，逐层比较原始/解析文档、全部 section/chunk、实际选中片段和 Final 真正收到的输入。合法引用 ID 或干净正文都不等于实际主张被支持。

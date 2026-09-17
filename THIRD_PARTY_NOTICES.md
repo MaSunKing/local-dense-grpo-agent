@@ -1,7 +1,7 @@
-# Third-party notices
+# 第三方代码与许可证声明
 
-This project is distributed under Apache-2.0; see LICENSE.
+本项目采用 Apache-2.0，完整许可证见 LICENSE；许可证原文保持不变。
 
-The `retrieval/dr_agent` package contains adapted agent/tool code from [rlresearch/dr-tulu](https://github.com/rlresearch/dr-tulu). Existing copyright and license notices in source files are retained. Public-release adaptations include medical retrieval integration, evidence provenance utilities, template filtering and chunk-selection contracts. The repository title describes this release's own dense-reward/local deployment focus; it does not remove the attribution of reused code.
+retrieval/dr_agent 含有适配自 [rlresearch/dr-tulu](https://github.com/rlresearch/dr-tulu) 的 Agent/工具代码，既有版权与许可证声明保留。此公开版本的适配涉及医学检索、证据 provenance、模板过滤与 chunk-selection 契约。项目名称描述自身稠密奖励与本地部署方向，不取消复用代码的必要署名。
 
-PyTorch, Transformers, PEFT, bitsandbytes, BeautifulSoup, lxml, sentence-transformers, FastMCP and other optional dependencies are distributed separately under their respective licenses. Qwen and embedding/reranking weights are not included. Users must obtain those weights and satisfy their applicable terms. External API providers are independently configured and licensed.
+PyTorch、Transformers、PEFT、bitsandbytes、BeautifulSoup、lxml、sentence-transformers、FastMCP 等依赖单独分发，受各自许可证约束。Qwen、embedding 和 reranker 权重不包含在仓库中，需自行获取并遵守相关条款。外部 API 服务独立配置和授权。

@@ -1,10 +1,10 @@
-# SFT and RL workflow
+# SFT 与 RL 训练安排
 
 ## SFT
 
-`sft/train_tc2.py` implements completion-only, weighted single-GPU QLoRA training. Prompt labels are masked, completion tokens contribute to loss, and per-sample weights are applied. The reference setup uses NF4 double quantization, bfloat16 compute, and LoRA on attention/MLP projections (rank 32, alpha 64, dropout 0.05).
+sft/train_tc2.py 实现 completion-only、样本加权的单卡 QLoRA。Prompt labels 被 mask，completion Token 参与 loss，样本权重独立施加。参考配置为 NF4 double quantization、bfloat16、attention/MLP LoRA（r32、alpha64、dropout0.05）。
 
-Provide your own stage dataset and fast tokenizer. `sft/prepare_dataset.py` defines the stage encoding contract. The source/tokenizer manifests are integrity checks, not permission to redistribute private training data. Trainer help is available with:
+自行提供 stage 数据与 fast tokenizer；编码契约见 sft/prepare_dataset.py。Manifest 用于完整性检查，不代表私有训练数据的公开授权。
 
 ```bash
 python -B sft/train_tc2.py --help
@@ -12,28 +12,28 @@ python -B sft/train_tc2.py --help
 
 ## RL
 
-Start from the pretrained backbone plus a pinned, completed SFT LoRA adapter. RL updates that shared adapter; SFT and RL evaluation adapters are alternatives, not two adapters merged together.
+从原始 backbone 加固定、完整的 SFT LoRA 起步，更新同一个共享 adapter。SFT/RL 对照使用两套替代 adapter，不将它们叠加合并。
 
 ```text
-Freeze behavior policy
-→ collect four rollouts per training question
-→ stage Judge and incremental evidence coverage
-→ independent semantic audit
-→ authority/token/group validation
-→ compile rewards and advantages
+冻结 behavior policy
+→ 每题采集四条 rollout
+→ 分阶段 Judge 与增量 coverage
+→ 独立语义审核
+→ authority / token / group 验证
+→ 编译 reward 与 advantage
 → clipped policy optimization
-→ save/check checkpoint
-→ held-out paired evaluation
+→ 原子 checkpoint 与完整性检查
+→ 留出集配对评测
 ```
 
-`training/train.py` requires a bound batch, model path, starting adapter and separate trusted authority artifact. Inspect its CLI rather than constructing ad-hoc records. The `--preflight` path validates compilation without loading model weights. Real training additionally checks behavior replay parity.
+training/train.py 需要绑定 batch、模型路径、起始 adapter 和独立可信 authority。先查看 CLI，不手工拼造评分记录。--preflight 不加载模型，真实训练另做 behavior replay parity 检查。
 
-The reference defaults are learning rate `1e-6`, clipping epsilon `0.2`, target KL `0.02` and parity tolerance `0.05`. These are starting parameters, not an empirically optimal prescription. GPU trainers use Linux locking primitives; use Linux/WSL and install a CUDA-compatible PyTorch build first. Optional dependencies are listed in `pyproject.toml`; exact deployment versions must be pinned and tested separately.
+参考默认参数：lr 1e-6、epsilon 0.2、target KL 0.02、parity tolerance 0.05。它们不是已证明最优的超参数。GPU trainer 使用 Linux 锁机制，应采用 Linux/WSL 并安装兼容 CUDA PyTorch；依赖见 pyproject.toml，部署版本需单独冻结验证。
 
-## Planned collection schedule
+## 批次安排
 
-First accept a small complete batch, then target **50 questions × 4 rollouts = 200 trajectories per collection/scoring cycle**. Preserve per-trajectory capture receipts and resumable collection state; never mix policy identities within a behavior batch. Incomplete question groups remain blocked.
+先验收完整小批次，再以 **50 题 × 4 rollout = 200 轨迹**为一个采集/评分周期。逐轨迹保留 capture 与断点状态，同一个 behavior batch 不混 policy identity；不完整题组暂不放行。
 
-Collection cycles are not optimizer steps. The exported trainer currently steps by question group. A true 50-question macro-update needs explicit gradient accumulation, loss normalization, memory scheduling and checkpoint semantics; do not label it implemented merely because 50 questions were collected.
+采集周期不是 optimizer step。当前 trainer 按题组更新；真正跨 50 题的 macro-update 需要显式梯度累积、loss 归一化、显存调度和保存语义。不能仅因为收集了 50 题就声称已实现一次大批更新。
 
-Auditing can happen after collection and scoring. A correction must be versioned under a trusted scorer/audit authority and trigger recompilation/revalidation; manually editing scores in a batch is not an authorized training signal. Changing prompts, adapters or decoding processors also changes identities and invalidates inappropriate cache/replay reuse.
+审核可在采集和评分后执行。纠正必须保留原始回执、版本和可信审核 authority，并重新编译/验证；直接改 batch 分数不是合法训练信号。Prompt、adapter 或 decoding processor 变化也会改变身份与缓存/replay 复用资格。

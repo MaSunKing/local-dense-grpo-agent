@@ -1,29 +1,29 @@
-# Dense rewards and credit assignment
+# 稠密奖励与归因
 
-The semantic channels are Checklist, Search query, Browse source focus, State, Final and eligible Stop. Tool credit is a separate task channel. The example frozen configuration is `training/config.json`.
+语义通道包括 Checklist、Search query、Browse source focus、State、Final 与可评价的 Stop。Tool 是单独的任务收益通道。冻结配置示例见 training/config.json。
 
-| Signal | Meaning |
+| 信号 | 职责 |
 |---|---|
-| Checklist | Coverage and fidelity to the original task scope |
-| Search | Query relevance to the current information gap |
-| Browse source focus | Ex-ante quality of the selected source, before reading it |
-| State | Evidence-status assessment and its actual evidence attachments |
-| Final | Completeness, evidence fidelity and actual citation support |
-| Evidence gain | Code-computed before/after coverage difference from trusted receipts |
-| Tool cost/policy event | Verified execution cost or authority-backed violation |
-| Stop | Trusted, evaluable voluntary termination; forced termination is N/A |
+| Checklist | 子任务覆盖与原题范围忠实度 |
+| Search | query 是否针对当前信息缺口 |
+| Browse source focus | 打开正文前的选源质量 |
+| State | 证据状态判断及实际 evidence attachment |
+| Final | 完整性、证据忠实度与实际 citation 支持 |
+| Evidence gain | 代码根据可信 before/after receipt 计算覆盖变化 |
+| Tool cost / policy event | 可信执行成本或有 authority 证明的违规 |
+| Stop | 可信且可评价的主动停止；forced termination 是 N/A |
 
-Browse selection quality is never retroactively replaced by evidence gain. Source identity, schema validity and provenance are gates, not positive reward sources. Pending/unobservable values are not silently converted to zero. An incomplete required core reward prevents its fixed four-rollout question group from entering advantage computation.
+不能用读后 evidence gain 反改事前 Browse 评分。Provenance、schema 和 scorer identity 是放行条件，不是正奖励来源。Pending/unobservable 不偷偷补成零；固定四轨迹题组中任一必需核心奖励缺失，整组不得计算 advantage。
 
-## Incremental coverage
+## 增量 Coverage
 
-`shared/gain_contract.py` fixes the prior receipt as immutable state. The next step uses the previous after-receipt as before-state and examines retained/new evidence under frozen requirements. Atomic judgments describe option/member presence, requested outcomes, applicable population, combined completeness, contradiction and new supporting IDs.
+shared/gain_contract.py 将 prior receipt 固定为不可变状态。下一次 Browse 的 before 引用上一步 after，在冻结 requirements 下评价 retained/new evidence。原子字段描述目标选项/成员、outcome、人群适用性、合并后完整性、反证和新增支持 ID。
 
-Code maps coverage to `unknown=0`, `partial=0.5`, `direct=1`. Irrelevant new evidence preserves earlier partial support with zero gain. Material support can advance unknown→partial; verified combined completeness can advance partial→direct. Contradiction is recorded separately, not rewarded as new support. Evidence invalidation requires a separate trusted event rather than a free-form downgrade.
+代码映射 unknown=0、partial=0.5、direct=1。无关新证据保留既有 partial，gain 为零；新增实质支持可将 unknown 推进至 partial；充分的合并证据可将 partial 推进至 direct。Contradiction 单独记录，不作为正收益；撤销证据需要可信 invalidation event，不能靠自由标签降级。
 
-## Advantages and objective
+## Advantage 与 Loss
 
-For each question, compare each rollout with the other rollouts (leave-one-out). Local channels use the configured channel baseline; task credit accounts for eligible future gain/cost events. Conceptually:
+同题各 rollout 与其余 rollout 做 leave-one-out 比较。局部通道采用配置定义的 baseline；Tool 任务收益计入合格的后续 gain/cost event。概念公式为：
 
 ```text
 A(channel) = local_weight × local_relative_credit
@@ -32,8 +32,8 @@ ratio = exp(current_logprob - behavior_logprob)
 loss = -mean(min(ratio × A, clip(ratio, 1-epsilon, 1+epsilon) × A))
 ```
 
-This implementation is GRPO-style group-relative optimization, not a claim that every GRPO paper's normalization is reproduced. See `training/core.py` for the precise baselines and row weights. In the example configuration only Tool receives `0.5 × Final` propagation; not every earlier stage receives Final credit.
+这里是 GRPO 风格的组内相对优化，不声称复现所有 GRPO 论文的标准化。精确 baseline 和 row weight 见 training/core.py。示例配置只有 Tool 接收 0.5 × Final，不是所有前序阶段都传播 Final credit。
 
-Even a nonnegative stage score can produce negative relative advantage. Verified tool costs and policy penalties also provide negative credit. A near-zero mean loss at the initial behavior-policy ratio does not imply zero gradient.
+局部分数非负也能产生负 advantage；工具成本和可信违规事件还可产生负收益。初始 ratio 接近 1、平均 loss 接近零，不等于梯度为零。
 
-Behavior log probabilities and training replay must use the same declared sampling distribution/processors. Reward events bind to exact generated-token spans; tool observation text and nearby guessed tokens are not valid substitutes.
+采集与 replay 必须一致复现声明的采样分布和 logits processor。奖励绑定精确生成 Token；工具返回文本或附近猜测的 Token 不可替代。
