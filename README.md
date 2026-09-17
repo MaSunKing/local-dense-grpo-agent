@@ -37,6 +37,22 @@ flowchart TD
     A --> L[裁剪策略目标：更新共享 LoRA]
 ```
 
+## 真实轨迹案例
+
+急性冠脉综合征后的秋水仙素研究问题，来自服务器实际 SFT 推理记录：
+
+```text
+英文医学原题
+→ Checklist：拆成疗效与治疗限制性不良反应两个要求
+→ Search：检索相关论文
+→ Browse：打开 S2 论文来源，读取带完整 ID 的正文片段
+→ State：模型将两个要求均标记为 direct
+→ FINAL_READY
+→ Final：四段英文答案，生成四个句后 citation
+```
+
+本例实际执行 **1 次 Search、1 次 Browse**，没有补造第二轮检索。[查看真实原始输出、工具动作与引用](examples/trajectory_demo/README.md)。这是过程案例，不是标准答案：State 是模型自报状态，治疗限制性不良反应是否充分回答仍需原文审核。本例未调用 Judge，奖励字段保留为 null。
+
 ## 已验证的范围
 
 | 内容 | 当前证据与边界 |
@@ -50,11 +66,13 @@ flowchart TD
 | 无模型离线检查 | 250 项核心合同回归检查；另有 Python 3.10 / 3.11 / 3.12 CI |
 | 大规模 RL 效果 | 尚未完成；不报告未经验证的提升百分比 |
 
-服务器结果描述的是有限范围的工程闭环，原始运行文件未随公开仓库发布。**它不能证明整体回答质量提升、Judge 语义稳定性或生产可用性。**
+表中工程验收与上面的 SFT 案例是不同运行，不能把工程验收奖励归到该案例。
 
 ## 训练路线
 
 SFT 学习工具协议和多步轨迹；RL 使用真实工具采集结果及局部奖励继续更新同一共享 LoRA。模型权重不合并为新的完整模型后再重复叠加适配器；具体加载与概率校验见[训练说明](docs/training.md)。
+
+训练与集成验证运行于新加坡 NSCC GPU 集群，兼顾单卡 QLoRA 与本地推理部署。当前已验收的 RL 参数更新是单 GPU 实验；共享阶段上下文上限为 **8192 tokens（输入＋预留输出）**，Final 单次输出上限为 **2400 tokens**。
 
 ```text
 固定当前策略 → 采集多条真实轨迹 → 分阶段 Judge → 独立语义复核
@@ -82,7 +100,7 @@ Browse 返回完整 chunk ID 与正文，State 保存 requirement 对应的 evid
 | 任务收益 | 增量证据覆盖、工具成本、可信 policy event 与可评价的主动 Stop |
 | 训练完整性 | 可信 authority、真实 capture/token 绑定、整题组 pending gate、原子 checkpoint |
 
-这是一份模块化研究代码发布，不是安装后即可运行的完整托管服务。模型权重、私有题集、真实 capture、密钥、集群脚本和实验运行日志不包含在公开仓库中。
+公开版包含算法模块、工具后端、训练器、真实轨迹摘录与离线测试；模型权重、私有题集、完整 capture、密钥和集群专用脚本不随代码发布。
 
 ## 零 GPU、零 API Key 演示
 
@@ -95,7 +113,7 @@ python -B run_pipeline.py check
 
 演示用明确标记的合成四轨迹 fixture 调用**实际 reward compiler**，验证正负 advantage 和增量证据继承。不会加载模型、请求 Judge 或更新参数；fixture token IDs 不代表真实模型 capture。
 
-离线检查包含奖励、authority、证据回执、Judge schema 与整组放行规则的回归测试。它们不能替代真实语义审核。
+离线检查覆盖奖励、authority、证据回执、Judge schema 与整组放行规则。
 
 ## 代码结构
 
@@ -107,11 +125,15 @@ judge/          评分计划、schema 验证与维度聚合
 shared/         不可变回执、evidence gain 与严格缓存
 training/       reward compiler、advantage、clipped loss 与 replay
 orchestrator/   可移植身份、token scope 与执行工具
-examples/       无密钥离线演示
+examples/       真实静态轨迹案例与无密钥离线验证
 docs/           中文架构、算法与训练说明
 ```
 
-GPU 训练需要 Linux/WSL、兼容的 CUDA PyTorch、额外依赖、自有模型与数据，以及正确绑定的 capture / authority。详见[训练说明](docs/training.md)；安装依赖并不会自动创建获准训练的 batch。
+按功能定位当前源码，请看[代码阅读导航](docs/code_navigation.md)。GPU 训练依赖与输入准备见[训练说明](docs/training.md)。
+
+## 当前研究边界
+
+已完成有限范围的真实采集、评分、奖励编译与参数更新闭环；大规模 RL 效果和 Judge 语义稳定性仍在评测。离线合同测试、工具成功和流程完成分别证明不同层面的工程行为，完整效果需要留出集对照与独立证据审核。
 
 ## 阅读导航
 
@@ -122,6 +144,7 @@ GPU 训练需要 Linux/WSL、兼容的 CUDA PyTorch、额外依赖、自有模�
 | [检索与正文处理](docs/retrieval.md) | 正文清洗、切分、召回、重排与证据坐标 |
 | [SFT 与 RL 训练](docs/training.md) | 模型加载、LoRA、行为概率 replay 与更新 |
 | [评测与独立复核](docs/evaluation.md) | 对照实验、Judge 审计与结果使用边界 |
+| [代码阅读导航](docs/code_navigation.md) | 当前入口、版本模块依赖与推荐阅读顺序 |
 
 ## 开源与使用边界
 

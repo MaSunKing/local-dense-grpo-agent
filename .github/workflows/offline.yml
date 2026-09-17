@@ -16,3 +16,4 @@ jobs:
         with:
           python-version: ${{ matrix.python-version }}
       - run: python -B run_pipeline.py check
+      - run: python -B examples/test_trajectory_excerpt.py

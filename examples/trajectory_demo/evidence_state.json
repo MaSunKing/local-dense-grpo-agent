@@ -1,0 +1,16 @@
+{
+  "updates": [
+    {
+      "id": "R1",
+      "status": "direct",
+      "evidence_ids": ["S2:80588d8bcdffa05dc5c1abd6e368aa8cf6a662cf#s0-c1"],
+      "revision_reason": ""
+    },
+    {
+      "id": "R2",
+      "status": "direct",
+      "evidence_ids": ["S2:80588d8bcdffa05dc5c1abd6e368aa8cf6a662cf#s0-c1"],
+      "revision_reason": ""
+    }
+  ]
+}

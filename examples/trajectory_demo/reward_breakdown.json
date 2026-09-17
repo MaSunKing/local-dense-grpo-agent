@@ -1,0 +1,17 @@
+{
+  "schema": "trajectory_display_reward_status_v1",
+  "status": "not_scored",
+  "checklist": null,
+  "search": null,
+  "browse_source_focus": null,
+  "evidence_gain": null,
+  "state": null,
+  "final_completeness": null,
+  "final_fidelity": null,
+  "final_citation": null,
+  "stop": null,
+  "judge_api_calls": 0,
+  "optimizer_updates": 0,
+  "reward_export_authorized": false,
+  "note": "本例仅展示真实SFT推理轨迹；未提供Judge或coverage评分回执，不推测工具成本、奖励或优势。null不是0。"
+}

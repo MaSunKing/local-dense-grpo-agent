@@ -1,0 +1,25 @@
+{
+  "schema": "public_trajectory_excerpt_v1",
+  "case_id": "acs-colchicine-sft-20260917",
+  "source": "用户提供的服务器第一题SFT只读导出记录",
+  "model": "Qwen3-8B",
+  "adapter": "V4.2 SFT checkpoint-00001459",
+  "model_completion_sha256_from_source_log": {
+    "checklist_init": "40155f91126b8ebd15f5939dce79febb5a360bf6baea49b9e3ee5dbb4d2ed646",
+    "search_decision": "5009bb61471bc1b6cda6716b8450c3b0f886f086a67ca58f56fb7b47e04ee2f3",
+    "browse_decision": "2a7ab335426652342b44ba7128a9882a4ae7f8ee02577ec84328a28e4963c4d6",
+    "state_update": "e5ff8d9df5bb1dbd997fc6abb4712e8324dbb84cb6c96994d09632b95b881d28",
+    "final_ready_decision": "51528c97ecba983b048b14f63b3a0366e2db6d4181ed95ad89dcbafb3d293fea",
+    "final": "1107d5c5d552693561f679b57083369537b0b107d2acb7be2bb5e2c6ea646b64"
+  },
+  "checklist_source_serialization": "compact JSON without trailing newline",
+  "state_source_serialization": "compact JSON without trailing newline",
+  "final_source_chars": 1119,
+  "final_file_display_difference": "文件末尾增加一个换行；hash核对时仅移除此换行",
+  "final_ready_completion": "<think>The requested items are addressed by the opened passages; synthesize them with their limitations instead of repeating retrieval.</think>\nFINAL_READY",
+  "semantic_review": "pending_source_text_review",
+  "full_capture_included": false,
+  "server_paths_included": false,
+  "secrets_included": false,
+  "raw_tool_response_included": false
+}

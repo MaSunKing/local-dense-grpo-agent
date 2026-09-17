@@ -1,5 +1,13 @@
 # SFT 与 RL 训练安排
 
+## 运行环境与预算
+
+服务器训练与集成实验使用新加坡 NSCC GPU 集群；当前已验收的一次 RL 更新为单 GPU，公开版不声明已经完成四卡分布式 GRPO。目标本地推理环境为 RTX 4080 SUPER 4-bit 加载，具体速度与任务质量需要另行验收。
+
+共享 V4.2 合同采用 8192 tokens，计算方式为每次请求的输入加预留输出。Checklist/State 输出预算 1200，工具决策 240，证据卡提取 600，Final 2400 tokens。Final 因而最多保留 5792 tokens 的完整输入，包含模板、题目、任务状态与证据；没有固定的 Final 字符上限。8K 是部署与训练合同的预算选择，不是硬件或 backbone 能力上限的声明。
+
+GPU 训练需要 Linux/WSL、兼容 CUDA PyTorch、自有模型与数据、真实 capture 及可信 authority。安装依赖不会自动生成可训练 batch；公开静态案例的摘录不能代替 token-exact 的训练记录。
+
 ## SFT
 
 sft/train_tc2.py 实现 completion-only、样本加权的单卡 QLoRA。Prompt labels 被 mask，completion Token 参与 loss，样本权重独立施加。参考配置为 NF4 double quantization、bfloat16、attention/MLP LoRA（r32、alpha64、dropout0.05）。
