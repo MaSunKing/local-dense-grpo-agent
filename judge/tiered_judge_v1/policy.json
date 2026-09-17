@@ -1,0 +1,14 @@
+{
+  "version": "tiered_judge_v1_1",
+  "automatic_extra_limitations": "diagnostic_only_not_requested",
+  "auxiliary_adjustment_max": 0.025,
+  "auxiliary_labels": {"poor": -1, "adequate": 0, "good": 1},
+  "stages": {
+    "checklist": {"core_weights": {"coverage": 0.7, "scope_fidelity": 0.3}, "auxiliary": "nonredundancy"},
+    "search": {"core_weights": {"gap_relevance": 0.7, "scope_fidelity": 0.3}, "auxiliary": "query_clarity"},
+    "browse": {"core_weights": {"source_relevance": 0.7, "scope_fidelity": 0.3}, "auxiliary": "selection_efficiency"},
+    "state": {"core_weights": {"status_accuracy": 0.75, "grounded_status_accuracy": 0.25}, "auxiliary": null},
+    "stop": {"core_weights": {"stop_appropriateness": 1.0}, "auxiliary": null},
+    "final": {"core_weights": {"completeness": 0.4, "fidelity": 0.35, "citation_support": 0.25}, "auxiliary": "clarity_nonredundancy"}
+  }
+}

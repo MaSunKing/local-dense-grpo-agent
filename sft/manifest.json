@@ -1,0 +1,18 @@
+{
+  "build_alignment.py": "1c111a905bfe1dd7b7936ab1df451d38f2ea9b83b581e6a876b069f09b99e327",
+  "candidate_window.py": "6c4fd319028e5bfb60b3675ba117f8d47f24bc75cdb283b590bbcc0a73bcacdd",
+  "engineering_v17_fixes.py": "327fbd4c46d25fbae754db7dda50bc7e54e1a46a7d9bb7bad829c84c61b47c6b",
+  "prepare_dataset.py": "0e9f8bed669697308f808306c1cf5d93d23b3eb5b973cd2ea9612762fa2de802",
+  "preview_selection_v23.py": "3f9ae961241c2f95783ded1cfb559fad87d44f5683e6cf91cb60faa651a483ad",
+  "preview_tokens_v22.py": "5aa04b461102cbf203e328e81d9f64e12314deba712f7329214703976c1d30fa",
+  "runtime_contract.py": "e87f16d7af9cfa4ae49d198b156c7fef860b7157ee9cabcc45a02ce89ab4af8d",
+  "shared_interface.py": "45a6eedae1bda920a62abbbb83fd24803de9dc3a0f5c1ebfe23e503d7a9c6614",
+  "source_context_v19.py": "b72cae59ab0e50666ad062673a880bd1f71c1cf0467395642aa1c222e2ee4a76",
+  "test_alignment.py": "c125b5ec37f704ef2c463db3c4f65cdf948d98cea7fcd0ee22b20c9ad5bf12e9",
+  "test_pdf_visibility.py": "32e308e2c7f5276edad5320b7f49982bba8f80ada444f8a09e9eec7580806bb2",
+  "test_v4.py": "c8f9379a99d89c5ca3436f7eb71ad08b9eca6e78a29474757d658ce065ca2c77",
+  "tokenizer_hashes.json": "ba49951f209da6812c53ec0b66bc34cfd141e0ab25ca656edad7ebbb5eea1158",
+  "train_tc2.py": "884acabd9983e5b9036f315e7d64a56e8e9eb93a3cfcb4724df9301c07e32a06",
+  "validate_alignment.py": "8a55fc9ce4824ecd98afd3e1c5b12ad4333901a4afce1d07ce35b58541ae33dc",
+  "verify_release.py": "ce8dd9c724f939f4bf940540f5596db28ea342c8b7919e1fa03073323d182823"
+}

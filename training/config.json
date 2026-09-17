@@ -1,0 +1,17 @@
+{
+  "channels": {
+    "checklist": {"local": 1, "final": 0, "loss_weight": 1},
+    "tool": {"local": 1, "final": 0.5, "loss_weight": 1},
+    "search_query": {"local": 1, "final": 0, "loss_weight": 1},
+    "browse_source_focus": {"local": 1, "final": 0, "loss_weight": 1},
+    "state": {"local": 1, "final": 0, "loss_weight": 1},
+    "stop": {"local": 1, "final": 0, "loss_weight": 1},
+    "final": {"local": 0, "final": 1, "loss_weight": 1}
+  },
+  "task": {
+    "stop_scale": 0.1,
+    "coverage_values": {"unknown": 0, "partial": 0.5, "direct": 1},
+    "tool_cost": 0.01,
+    "policy_penalty": 0.1
+  }
+}

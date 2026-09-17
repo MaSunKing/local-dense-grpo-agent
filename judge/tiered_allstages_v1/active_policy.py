@@ -1,0 +1,4 @@
+"""Effective candidate prompts. Original live prompt set remains immutable."""
+from prompts import PROMPTS as ORIGINAL
+PROMPTS=dict(ORIGINAL)
+PROMPTS['checklist']='''STAGE CONTRACT: This is CHECKLIST PLANNING before research, NOT a Final answer. model_items are questions or instructions describing what the Agent plans to investigate. They are not factual answers. An item such as an instruction to find a requested quantity can fully cover a requirement asking for that quantity even though the quantity is not yet known. Do not require factual values, evidence, citations or solved answers in a planning checklist. Restating a task as a properly scoped investigation item is valid; unrelated generic planning is not. Judge whether the plan includes each requested investigation and preserves its scope.\n'''+ORIGINAL['checklist']
